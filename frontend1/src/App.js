@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { startGame, updateScore } from "./services/apiService";
 
@@ -17,18 +17,47 @@ function App() {
     setThrows(newThrows); 
   };
 
-  const submitThrows = () => {
+  async function handleScoreUpdate(scores) {
+    const player = turn === 1 ? player1 : player2;
+    const updatedScore = await updateScore(
+        player,
+        scores[0], scores[1], scores[2]
+    );
+
+    if (turn === 1) {
+        setScore1(prevScore => {
+            console.log(`Updating Score1: ${prevScore} → ${updatedScore}`);
+            return updatedScore;
+        });
+    } else {
+        setScore2(prevScore => {
+            console.log(`Updating Score2: ${prevScore} → ${updatedScore}`);
+            return updatedScore;
+        });
+    }
+}
+
+const submitThrows = async () => {
     const scores = throws.map(t => parseInt(t, 10) || 0);
+    console.log(scores, turn);
 
-    turn === 1 ? setScore1(updateScore(player1, scores[0], scores[1], scores[2]))
-    : setScore2(updateScore(player2, scores[0], scores[1], scores[2]));
-
-    console.log(score1);
-    console.log(score2);
+    await handleScoreUpdate(scores);
 
     setThrows(["", "", ""]);
     setTurn(turn === 1 ? 2 : 1);
-  };
+};
+
+useEffect(() => {
+    console.log("Updated Scores:", score1, score2);
+
+    if (score1 === 0) {
+        alert(`${player1} has won the game!`);
+        setTurn(0);
+    } else if (score2 === 0) {
+        alert(`${player2} has won the game!`);
+        setTurn(0);
+    }
+}, [score1, score2]);
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>

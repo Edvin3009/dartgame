@@ -19,6 +19,7 @@ public class GameController {
         if (game == null) throw new IllegalArgumentException("No current game");
         
         Player p = game.getPlayer(player);
+        System.out.println(p.getName());
         int[] scores = {t1, t2, t3};
 
         game.updateScore(p, scores);

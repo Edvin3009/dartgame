@@ -20,6 +20,8 @@ public class Game {
         
         int currentScore = p.getScore();
         int roundScore = IntStream.of(scores).sum();
+        System.out.println(p.getScore());
+        System.out.println(p.getName());
 
         if (currentScore < roundScore){
             return;
@@ -31,6 +33,8 @@ public class Game {
         }
 
         p.setScore(currentScore - roundScore);
+        System.out.println(p.getScore());
+        System.out.println(p.getName());
         return;
     }
 
@@ -46,9 +50,9 @@ public class Game {
 
     public Player getPlayer(String name){
         if (p1.getName().equals(name) || p2.getName().equals(name)){
-            return p1.getName() == name ? p1 : p2;
+            return p1.getName().equals(name) ? p1 : p2;
         }
-        throw new IllegalArgumentException("Player with name " + name + " does not equal any of " + p1.getName() + p2.getName());
+        throw new IllegalArgumentException("Player with name " + name + " does not equal any of " + p1.getName() + " or " + p2.getName());
     }
 
     public boolean gameOver() {
